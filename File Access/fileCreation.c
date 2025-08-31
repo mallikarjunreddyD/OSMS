@@ -10,8 +10,8 @@
 #include <errno.h>
 
 int main() {
-    const char *filename = "/tmp/os_security_demo.txt";
-    const char *content = "Hello welcome to OS security course";
+    const char *filename = "/tmp/os_security_demo1.txt";
+    const char *content = "Hello welcome to OS and Mobile security course";
     int fd;
     struct stat file_stat;
     struct passwd *pwd;

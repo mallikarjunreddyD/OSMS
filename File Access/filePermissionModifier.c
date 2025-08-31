@@ -40,7 +40,7 @@ void display_permissions(const char *filename) {
 }
 
 int main() {
-    const char *filename = "/tmp/os_security_demo.txt";
+    const char *filename = "/tmp/os_security_demo1.txt";
     struct stat file_stat;
     
     printf("=== OS Security Course - Permission Modifier (User X) ===\n\n");

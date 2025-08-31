@@ -10,7 +10,7 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
-#define PORT 8082
+#define PORT 9090
 #define BUFFER_SIZE 1024
 #define MAX_FILENAME 256
 
