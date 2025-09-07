@@ -45,10 +45,11 @@ extern "C" {
     }
     
     __declspec(dllexport) int AnotherFunction(int param) {
+        std::string message = "Another function intercepted!\n\n"
+                             "Parameter received: " + std::to_string(param) + "\n\n"
+                             "Malicious DLL can modify parameters and return values.";
         MessageBoxA(NULL, 
-            "Another function intercepted!\n\n"
-            "Parameter received: " + std::to_string(param) + "\n\n"
-            "Malicious DLL can modify parameters and return values.",
+            message.c_str(),
             "Parameter Interception", 
             MB_OK | MB_ICONINFORMATION);
         return param * 2; // Modify the return value

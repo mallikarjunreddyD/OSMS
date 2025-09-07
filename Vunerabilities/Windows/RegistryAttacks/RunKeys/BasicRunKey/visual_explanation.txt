@@ -1,0 +1,159 @@
+# Basic Run Key Attack - Simple Visual Explanation
+
+## 🎯 The Attack in Simple Terms
+
+```
+STEP 1: Attacker gets into your computer
+        ┌─────────────┐
+        │   Attacker  │ ────► Your Computer
+        │   gains     │
+        │   access    │
+        └─────────────┘
+
+STEP 2: Attacker puts bad program on your computer
+        ┌─────────────┐
+        │   malware   │ ────► C:\malware.exe
+        │   .exe      │
+        └─────────────┘
+
+STEP 3: Attacker changes Windows settings (Registry)
+        ┌─────────────────────────────────────┐
+        │        WINDOWS REGISTRY             │
+        │                                     │
+        │   Run Key:                          │
+        │   "WindowsUpdate" = "C:\malware.exe" │
+        │                                     │
+        │   (Looks like legitimate Windows    │
+        │    Update, but points to malware)   │
+        └─────────────────────────────────────┘
+
+STEP 4: You log into your computer
+        ┌─────────────┐
+        │   You       │ ────► Login to Windows
+        │   login     │
+        └─────────────┘
+
+STEP 5: Windows automatically runs the bad program
+        ┌─────────────┐
+        │   Windows   │ ────► Runs malware.exe
+        │   checks    │       automatically!
+        │   Run keys  │
+        └─────────────┘
+
+STEP 6: Bad program does bad things
+        ┌─────────────┐
+        │   malware   │ ────► Steals data,
+        │   .exe      │       creates backdoor,
+        │   runs      │       etc.
+        └─────────────┘
+```
+
+## 🔍 What Our Demo Program Does
+
+```
+OUR SAFE DEMO:
+┌─────────────────────────────────────────────────────────────────┐
+│                    run_key_manipulation.cpp                    │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  1. Shows you how Run keys work                                 │
+│  2. Adds a SAFE entry:                                          │
+│     "WindowsUpdate" = "C:\Windows\System32\notepad.exe"        │
+│  3. Shows you the entry was added                               │
+│  4. REMOVES the entry (cleanup)                                 │
+│  5. Shows you it's gone                                         │
+│                                                                 │
+│  ✅ SAFE: Uses notepad.exe (harmless)                          │
+│  ✅ EDUCATIONAL: Shows the attack mechanism                     │
+│  ✅ CLEAN: Removes the entry when done                          │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+## 🚨 Real Attack vs Our Demo
+
+```
+REAL ATTACK:                    OUR DEMO:
+┌─────────────────┐            ┌─────────────────┐
+│   malware.exe   │            │   notepad.exe   │
+│   - Steals data │            │   - Opens       │
+│   - Creates     │            │     notepad     │
+│     backdoor    │            │   - Harmless    │
+│   - Escalates   │            │   - Educational │
+│     privileges  │            │   - Safe        │
+└─────────────────┘            └─────────────────┘
+```
+
+## 📊 Registry Entry Comparison
+
+```
+BEFORE (Clean System):
+┌─────────────────────────────────────┐
+│   HKCU\...\Run                      │
+│   ├── "Chrome" = "C:\chrome.exe"    │
+│   └── "Spotify" = "C:\spotify.exe"  │
+└─────────────────────────────────────┘
+
+AFTER ATTACK (Malicious Entry Added):
+┌─────────────────────────────────────┐
+│   HKCU\...\Run                      │
+│   ├── "Chrome" = "C:\chrome.exe"    │
+│   ├── "Spotify" = "C:\spotify.exe"  │
+│   └── "WindowsUpdate" = "C:\malware.exe" ← BAD!
+└─────────────────────────────────────┘
+
+AFTER OUR DEMO (Entry Removed):
+┌─────────────────────────────────────┐
+│   HKCU\...\Run                      │
+│   ├── "Chrome" = "C:\chrome.exe"    │
+│   └── "Spotify" = "C:\spotify.exe"  │
+└─────────────────────────────────────┘
+```
+
+## 🛡️ How to Protect Yourself
+
+```
+PROTECTION METHODS:
+┌─────────────────────────────────────────────────────────────────┐
+│                                                                 │
+│  1. 🔍 REGULAR CHECKS                                           │
+│     - Check Run keys regularly                                  │
+│     - Look for suspicious entries                               │
+│     - Verify legitimate programs                                │
+│                                                                 │
+│  2. 🛡️ SECURITY SOFTWARE                                        │
+│     - Use antivirus software                                    │
+│     - Enable real-time protection                               │
+│     - Keep software updated                                     │
+│                                                                 │
+│  3. 🔒 PERMISSIONS                                              │
+│     - Don't run as administrator unnecessarily                  │
+│     - Use standard user account                                 │
+│     - Be careful with downloads                                 │
+│                                                                 │
+│  4. 📚 EDUCATION                                                │
+│     - Learn about these attacks                                 │
+│     - Be suspicious of emails                                   │
+│     - Don't click unknown links                                 │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+## 🎓 Key Learning Points
+
+```
+WHAT YOU LEARNED:
+┌─────────────────────────────────────────────────────────────────┐
+│                                                                 │
+│  ✅ How Windows Run keys work                                   │
+│  ✅ How attackers use them for persistence                      │
+│  ✅ How to detect malicious entries                             │
+│  ✅ How to protect against this attack                          │
+│  ✅ How to safely demonstrate the attack                        │
+│                                                                 │
+│  🎯 MAIN CONCEPT:                                               │
+│     Windows automatically runs programs listed in Run keys     │
+│     when you log in. Attackers exploit this to run malware.    │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```

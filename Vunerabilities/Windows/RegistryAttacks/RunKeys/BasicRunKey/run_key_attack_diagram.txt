@@ -1,0 +1,309 @@
+# Basic Run Key Attack - Visual Diagram
+
+## ASCII Flow Diagram
+
+```
+                    BASIC RUN KEY ATTACK FLOW
+                    =========================
+
+1. ATTACKER GAINS ACCESS
+   ┌─────────────────┐
+   │   Attacker      │
+   │   gains access  │
+   │   to system     │
+   └─────────┬───────┘
+             │
+             ▼
+
+2. DOWNLOAD/PLACE MALICIOUS EXECUTABLE
+   ┌─────────────────┐
+   │   Malicious     │
+   │   malware.exe   │
+   │   placed in     │
+   │   system        │
+   └─────────┬───────┘
+             │
+             ▼
+
+3. MODIFY REGISTRY RUN KEY
+   ┌─────────────────────────────────────┐
+   │           WINDOWS REGISTRY          │
+   │                                     │
+   │   HKCU\Software\Microsoft\          │
+   │   Windows\CurrentVersion\Run        │
+   │                                     │
+   │   ┌─────────────────────────────┐   │
+   │   │ Name: "WindowsUpdate"       │   │
+   │   │ Value: "C:\malware.exe"     │   │
+   │   └─────────────────────────────┘   │
+   └─────────────────┬───────────────────┘
+                     │
+                     ▼
+
+4. USER LOGS IN / SYSTEM STARTS
+   ┌─────────────────┐
+   │   User Login    │
+   │   or System     │
+   │   Startup       │
+   └─────────┬───────┘
+             │
+             ▼
+
+5. WINDOWS CHECKS RUN KEYS
+   ┌─────────────────┐
+   │   Windows       │
+   │   automatically │
+   │   reads Run     │
+   │   key entries   │
+   └─────────┬───────┘
+             │
+             ▼
+
+6. MALICIOUS PROGRAM EXECUTES
+   ┌─────────────────┐
+   │   malware.exe   │
+   │   runs          │
+   │   automatically │
+   └─────────┬───────┘
+             │
+             ▼
+
+7. ATTACK PAYLOAD EXECUTES
+   ┌─────────────────┐
+   │   Steal Data    │
+   │   Create        │
+   │   Backdoor      │
+   │   Escalate      │
+   │   Privileges    │
+   └─────────────────┘
+
+```
+
+## Detailed Component Diagram
+
+```
+                    REGISTRY RUN KEY STRUCTURE
+                    ==========================
+
+┌─────────────────────────────────────────────────────────────────┐
+│                    WINDOWS REGISTRY                             │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  HKEY_CURRENT_USER (HKCU)                                      │
+│  └── Software                                                  │
+│      └── Microsoft                                             │
+│          └── Windows                                           │
+│              └── CurrentVersion                                │
+│                  └── Run                                       │
+│                      ├── "WindowsUpdate" = "C:\malware.exe"    │
+│                      ├── "SystemService" = "C:\legit.exe"      │
+│                      └── "UserApp" = "C:\app.exe"              │
+│                                                                 │
+│  HKEY_LOCAL_MACHINE (HKLM)                                     │
+│  └── Software                                                  │
+│      └── Microsoft                                             │
+│          └── Windows                                           │
+│              └── CurrentVersion                                │
+│                  └── Run                                       │
+│                      ├── "SystemStartup" = "C:\sys.exe"        │
+│                      └── "ServiceManager" = "C:\svc.exe"       │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+```
+
+## Attack Timeline
+
+```
+                    ATTACK TIMELINE
+                    ===============
+
+Time: T0
+┌─────────────────────────────────────────────────────────────────┐
+│  Attacker gains access to victim's system                      │
+│  - Phishing email                                              │
+│  - Malware download                                            │
+│  - Social engineering                                          │
+│  - Exploit vulnerability                                       │
+└─────────────────────────────────────────────────────────────────┘
+                                │
+                                ▼
+Time: T1
+┌─────────────────────────────────────────────────────────────────┐
+│  Attacker places malicious executable                          │
+│  - Downloads malware.exe                                       │
+│  - Places in system directory                                  │
+│  - Disguises as legitimate process                             │
+└─────────────────────────────────────────────────────────────────┘
+                                │
+                                ▼
+Time: T2
+┌─────────────────────────────────────────────────────────────────┐
+│  Attacker modifies registry Run key                            │
+│  - Opens registry editor                                       │
+│  - Adds malicious entry                                        │
+│  - Disguises entry name                                        │
+└─────────────────────────────────────────────────────────────────┘
+                                │
+                                ▼
+Time: T3
+┌─────────────────────────────────────────────────────────────────┐
+│  User logs in or system reboots                                │
+│  - Windows startup process                                     │
+│  - User authentication                                         │
+│  - Desktop loading                                             │
+└─────────────────────────────────────────────────────────────────┘
+                                │
+                                ▼
+Time: T4
+┌─────────────────────────────────────────────────────────────────┐
+│  Windows automatically executes Run key entries                │
+│  - Reads registry entries                                      │
+│  - Executes listed programs                                    │
+│  - Malicious program runs                                      │
+└─────────────────────────────────────────────────────────────────┘
+                                │
+                                ▼
+Time: T5
+┌─────────────────────────────────────────────────────────────────┐
+│  Malicious program performs attack                             │
+│  - Data exfiltration                                           │
+│  - Backdoor creation                                           │
+│  - Privilege escalation                                        │
+│  - Additional persistence                                      │
+└─────────────────────────────────────────────────────────────────┘
+
+```
+
+## Code Flow Diagram
+
+```
+                    PROGRAM EXECUTION FLOW
+                    =====================
+
+┌─────────────────────────────────────────────────────────────────┐
+│                    run_key_manipulation.cpp                    │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  1. main() function starts                                     │
+│     │                                                           │
+│     ▼                                                           │
+│  2. ShowRunKeyLocations()                                      │
+│     │                                                           │
+│     ▼                                                           │
+│  3. RegistryRunKeyDemo demo("HKCU\\...\\Run")                  │
+│     │                                                           │
+│     ▼                                                           │
+│  4. demo.OpenKey()                                             │
+│     │                                                           │
+│     ▼                                                           │
+│  5. demo.ListRunKeyEntries()                                   │
+│     │                                                           │
+│     ▼                                                           │
+│  6. demo.DemonstrateMaliciousEntry()                           │
+│     │                                                           │
+│     ▼                                                           │
+│  7. RegSetValueExA() - Adds malicious entry                    │
+│     │                                                           │
+│     ▼                                                           │
+│  8. demo.ListRunKeyEntries() - Shows new entry                 │
+│     │                                                           │
+│     ▼                                                           │
+│  9. demo.RemoveMaliciousEntry() - Cleanup                      │
+│     │                                                           │
+│     ▼                                                           │
+│  10. RegDeleteValueA() - Removes entry                         │
+│      │                                                          │
+│      ▼                                                          │
+│  11. demo.ListRunKeyEntries() - Confirms removal               │
+│      │                                                          │
+│      ▼                                                          │
+│  12. Program exits safely                                      │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+```
+
+## Registry Entry Details
+
+```
+                    REGISTRY ENTRY STRUCTURE
+                    ========================
+
+┌─────────────────────────────────────────────────────────────────┐
+│                    REGISTRY ENTRY                               │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  Key Path: HKCU\Software\Microsoft\Windows\CurrentVersion\Run   │
+│                                                                 │
+│  Entry Name: "WindowsUpdate"                                   │
+│  Entry Type: REG_SZ (String)                                   │
+│  Entry Value: "C:\Windows\System32\notepad.exe"                │
+│                                                                 │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │  Name: WindowsUpdate                                    │   │
+│  │  Type: REG_SZ                                           │   │
+│  │  Data: C:\Windows\System32\notepad.exe                  │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                                                                 │
+│  In Real Attack:                                                │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │  Name: WindowsUpdate                                    │   │
+│  │  Type: REG_SZ                                           │   │
+│  │  Data: C:\Users\Victim\AppData\Roaming\malware.exe     │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+```
+
+## Detection and Mitigation
+
+```
+                    DETECTION & MITIGATION
+                    ======================
+
+┌─────────────────────────────────────────────────────────────────┐
+│                        DETECTION                                │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  1. Registry Monitoring                                         │
+│     - Monitor Run key changes                                   │
+│     - Alert on new entries                                      │
+│     - Check for suspicious names                                │
+│                                                                 │
+│  2. Process Monitoring                                          │
+│     - Monitor processes from Run keys                           │
+│     - Check for unusual behavior                                │
+│     - Verify file signatures                                    │
+│                                                                 │
+│  3. File System Monitoring                                      │
+│     - Monitor new executable files                              │
+│     - Check file hashes                                         │
+│     - Alert on suspicious locations                             │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                       MITIGATION                                │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  1. Registry Permissions                                        │
+│     - Restrict write access to Run keys                         │
+│     - Use Group Policy controls                                 │
+│     - Implement least privilege                                 │
+│                                                                 │
+│  2. Application Whitelisting                                    │
+│     - Use AppLocker                                             │
+│     - Block unauthorized executables                            │
+│     - Require code signing                                      │
+│                                                                 │
+│  3. Monitoring and Alerting                                     │
+│     - Implement SIEM solutions                                  │
+│     - Set up automated alerts                                   │
+│     - Regular security audits                                   │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+```
